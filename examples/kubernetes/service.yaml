@@ -1,0 +1,20 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: heketi-exporter
+  labels:
+    glusterfs: heketi-exporter
+    heketi: exporter
+    app: heketi-exporter
+  annotations:
+    prometheus.io/scrape: "true"
+spec:
+  selector:
+    glusterfs: heketi-exporter
+    app: heketi-exporter
+  clusterIP: None
+  ports:
+  - name: scrape
+    port: 9189
+    protocol: TCP
+    targetPort: 9189

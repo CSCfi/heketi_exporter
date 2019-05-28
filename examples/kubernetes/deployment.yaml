@@ -1,0 +1,42 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: heketi-exporter
+  labels:
+    glusterfs: heketi-exporter
+    heketi: exporter
+    app: heketi-exporter
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: heketi
+      labels:
+        glusterfs: heketi-exporter
+        heketi: exporter
+        app: heketi-exporter
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: heketi-exporter
+          image: <CHANGE ME>/heketi-metrics-exporter:latest
+          imagePullPolicy: Always
+          command: ["/heketi-metrics-exporter"]
+          env:
+          - name: HEKETI_CLI_USER
+            value: admin
+          - name: HEKETI_CLI_KEY
+            value: "<CHANGE ME>"
+          - name: HEKETI_CLI_SERVER
+            value: "http://<CHANGE ME>:8080"
+          ports:
+            - containerPort: 9189
+              name: scrape
+          resources:
+            requests:
+              cpu: 10m
+              memory: 200Mi
+          terminationMessagePath: /dev/termination-log
+          securityContext:
+            capabilities: {}
+            privileged: false
